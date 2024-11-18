@@ -4,6 +4,8 @@ let cardBorder = document.getElementById("cardBorder");
 let cardBorderTwo = document.getElementById("cardBorderTwo");
 let newDeck = document.getElementById("new-deck");
 let newCards = document.getElementById("draw");
+let winningText = document.getElementById("winnerText");
+let cardsRemaining = document.getElementById("cardsRemaining");
 let card1 = {
   value: "",
 };
@@ -31,11 +33,11 @@ function winningCard(cardOne, cardTwo) {
   const cardOneValue = valueOptions.indexOf(cardOne.value);
   const cardTwoValue = valueOptions.indexOf(cardTwo.value);
   if (cardOneValue > cardTwoValue) {
-    console.log("card one wins");
+    winningText.innerHTML = `<p>Player One Wins!</p>`;
   } else if (cardTwoValue > cardOneValue) {
-    console.log("card two is the winner");
+    winningText.innerHTML = `<p>Player Two Wins!</p>`;
   } else {
-    console.log("it is a tie");
+    winningText.innerHTML = `<p>WAR</p>`;
   }
 }
 
@@ -50,6 +52,8 @@ function getDeck() {
       cardBorder.style.display = "block";
       cardBorderTwo.style.display = "block";
       cardRender.innerHTML = "";
+      winningText.innerHTML = "";
+      cardsRemaining.textContent = "";
     });
 }
 
@@ -57,12 +61,16 @@ function drawCards() {
   fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/draw/?count=2`)
     .then((res) => res.json())
     .then((data) => {
+      console.log(data);
       cardBorder.style.display = "none";
       cardBorderTwo.style.display = "none";
       cardRender.innerHTML = `
             <img src=${data.cards[0].image} />
             <img src=${data.cards[1].image} />
         `;
+      cardsRemaining.innerHTML = `
+      <p>Reamaining Cards: ${data.remaining}</p>
+      `;
       card1.value = data.cards[0].value;
       card2.value = data.cards[1].value;
       winningCard(card1, card2);

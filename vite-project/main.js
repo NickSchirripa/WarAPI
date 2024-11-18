@@ -48,20 +48,6 @@ function winningCard(cardOne, cardTwo) {
   } else {
     winningText.innerHTML = `<p>WAR</p>`;
   }
-
-  fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/draw/?count=0`)
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.remaining === 0) {
-        newCards.style.display = "none";
-        cardsRemaining.innerHTML = "You Need a New Deck, IDIOT! :)";
-      }
-      if (data.remaining === 0 && playerOneScore > playerTwoScore) {
-        winningText.innerHTML = "<p>PLAYER ONE WINNNNNSSS</p>";
-      } else if (data.remaining === 0 && playerTwoScore > playerOneScore) {
-        winningText.innerHTML = "<p>PLAYER TWO WIIINNNSS</p>";
-      }
-    });
 }
 
 function getDeck() {
@@ -97,13 +83,30 @@ function drawCards() {
             <img src=${data.cards[0].image} />
             <img src=${data.cards[1].image} />
         `;
+      card1.value = data.cards[0].value;
+      card2.value = data.cards[1].value;
+      renderHeader();
+
+      winningCard(card1, card2);
+    });
+}
+
+function renderHeader() {
+  fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/draw/?count=0`)
+    .then((res) => res.json())
+    .then((data) => {
       cardsRemaining.innerHTML = `
       <p>Reamaining Cards: ${data.remaining}</p>
       `;
-      card1.value = data.cards[0].value;
-      card2.value = data.cards[1].value;
-
-      winningCard(card1, card2);
+      if (data.remaining === 0) {
+        newCards.style.display = "none";
+        cardsRemaining.innerHTML = "You Need a New Deck, IDIOT! :)";
+      }
+      if (data.remaining === 0 && playerOneScore > playerTwoScore) {
+        winningText.innerHTML = "<p>PLAYER ONE WINNNNNSSS</p>";
+      } else if (data.remaining === 0 && playerTwoScore > playerOneScore) {
+        winningText.innerHTML = "<p>PLAYER TWO WIIINNNSS</p>";
+      }
     });
 }
 

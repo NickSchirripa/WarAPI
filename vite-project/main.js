@@ -85,13 +85,13 @@ function drawCards() {
         `;
       card1.value = data.cards[0].value;
       card2.value = data.cards[1].value;
-      renderHeader();
+      renderEndGameHeader();
 
       winningCard(card1, card2);
     });
 }
 
-function renderHeader() {
+function renderEndGameHeader() {
   fetch(`https://www.deckofcardsapi.com/api/deck/${deckId}/draw/?count=0`)
     .then((res) => res.json())
     .then((data) => {
